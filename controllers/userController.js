@@ -23,6 +23,18 @@ const addUser = async (req, res, next) => {
   }
 };
 
+const getAll = async (req, res, next) => {
+  try {
+    const users = await User.findAll({ attributes: { exclude: 'password' } });
+    return res.status(200).send(users);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).end();
+    return next();
+  }
+};
+
 module.exports = {
   addUser,
+  getAll,
 };
