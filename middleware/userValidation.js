@@ -32,9 +32,6 @@ const userValidation = (req, res, next) => {
     }); 
   }
   emailValidation(res, email);
-  // if (quantity < 1) { 
-  //   return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' }); 
-  // }
   
   next();
 };
