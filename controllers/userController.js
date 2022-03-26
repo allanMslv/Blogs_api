@@ -48,8 +48,23 @@ const getById = async (req, res, next) => {
   }
 };
 
+const exclude = async (req, res, next) => {
+  try {
+    const userId = req.user.dataValues.id;
+    const myUser = await User.findByPk(userId);
+    await myUser.destroy();
+
+    res.status(204).end();
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).end();
+    return next();
+  }
+};
+
 module.exports = {
   addUser,
   getAll,
   getById,
+  exclude,
 };
