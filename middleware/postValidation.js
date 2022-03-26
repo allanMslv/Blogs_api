@@ -1,4 +1,4 @@
-const { Category } = require('../models');
+const { Category, BlogPost } = require('../models');
 
 const postValidation = async (req, res, next) => {
   const { title, content, categoryIds } = req.body;
@@ -17,6 +17,21 @@ const postValidation = async (req, res, next) => {
   next();
 };
 
+const userFromPostValidation = async (req, res, next) => {
+  const currentUser = req.user.dataValues.id;
+  const { id } = req.params;
+
+  const result = await BlogPost.findByPk(id);
+  if (!result) {
+    return res.status(404).send({ message: 'Post does not exist' });
+  }
+  if (result.dataValues.userId !== currentUser) { 
+    return res.status(401).send({ message: 'Unauthorized user' }); 
+  }
+  next();
+};
+
 module.exports = {
   postValidation,
+  userFromPostValidation,
 };

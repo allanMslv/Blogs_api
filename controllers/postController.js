@@ -55,8 +55,21 @@ const getById = async (req, res, next) => {
   }
 };
 
+const exclude = async (req, res, next) => {
+  try {
+    const post = await BlogPost.findByPk(req.params.id);
+    await post.destroy();
+    return res.status(204).end();
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).end();
+    return next();
+  }
+};
+
 module.exports = {
   addPost,
   getAll,
   getById,
+  exclude,
 };
