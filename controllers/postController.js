@@ -67,9 +67,35 @@ const exclude = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const { title, content } = req.body;
+    const post = await BlogPost.findByPk(req.params.id);
+
+    post.dataValues.title = title;
+    post.dataValues.content = content;
+    await post.save();
+
+    const userId = req.user.dataValues.id;
+    const updatedPost = { title, content, userId };
+
+    const categ = await PostsCategory.findAll({ where: { postId: post.dataValues.id } });
+    const { categoryId } = categ[0].dataValues;
+    const categresult = await Category.findByPk(categoryId);
+    const categories = categresult.dataValues;
+
+    return res.status(200).send({ ...updatedPost, categories: [categories] });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).end();
+    return next();
+  }
+};
+
 module.exports = {
   addPost,
   getAll,
   getById,
   exclude,
+  update,
 };
