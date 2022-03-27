@@ -6,7 +6,6 @@ const emailRegisterValidation = async (email) => {
       email,
     },
   });
-  console.log(isRegistered.length);
   if (isRegistered.length === 0) { return false; } 
   return true;
 };
